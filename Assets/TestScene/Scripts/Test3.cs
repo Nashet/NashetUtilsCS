@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 
-public class Test3 : TestScript
+namespace TestScene
 {
-    protected override void Update()
+    public class Test3 : TestScript
     {
-        if (Random.value <= limit)
-            Log("Update..");
+        protected override void Update()
+        {
+            if (Random.value <= limit)
+                Debug.Log("Update..");
+        }
     }
 }
