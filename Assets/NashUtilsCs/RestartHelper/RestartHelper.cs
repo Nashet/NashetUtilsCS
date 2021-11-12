@@ -7,7 +7,7 @@ namespace NashUtilsCs.RestartHelper
     public static class RestartHelper
     {
         // %(ctrl on Windows, cmd on macOS), # (shift), & (alt)
-        [MenuItem("EDITORS/M3/RestartHelper #%&p")]
+        [MenuItem("EDITORS/M3/RestartHelper &r")]
         public static void RestartIfCompilingIsDone()
         {
             Log("Registered attempt to restart editor Ж)");
@@ -16,7 +16,7 @@ namespace NashUtilsCs.RestartHelper
         }
         
         // %(ctrl on Windows, cmd on macOS), # (shift), & (alt)
-        [MenuItem("EDITORS/M3/AbortLaunch #%&s")]
+        [MenuItem("EDITORS/M3/AbortLaunch &a")]
         public static void AbortLaunch()
         {
             Log("Registered attempt to abort launch");
