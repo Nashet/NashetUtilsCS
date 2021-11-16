@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿#if UNITY_EDITOR
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
@@ -58,3 +59,4 @@ namespace NashUtilsCs.RestartHelper
         }
     }
 }
+#endif
