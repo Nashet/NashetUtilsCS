@@ -36,7 +36,7 @@ namespace NashUtilsCs.HashColorLog
             if (hadMultipleLines)
                 colorized += "\n(Original text) " + text;
             
-            Debug.Log(colorized);
+            Debug.LogError(colorized);
 
             _logNumber++;
         }
