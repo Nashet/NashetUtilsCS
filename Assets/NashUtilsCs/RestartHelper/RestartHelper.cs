@@ -1,5 +1,5 @@
 ﻿#if UNITY_EDITOR
-using System;
+
 using System.Reflection;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -24,16 +24,16 @@ namespace NashUtilsCs.RestartHelper
             {
                 ClearConsole();
                 Log("Registered attempt to restart editor Ж)");
-                RestartAsync();    
+                RestartAsync();
             }
         }
 
         // %(ctrl on Windows, cmd on macOS), # (shift), & (alt)
-        [MenuItem("EDITORS/M3/AbortLaunch &a")]
+        [MenuItem("EDITORS/M3/AbortLaunch %a")]
         public static void AbortLaunch()
         {
             Log("Registered attempt to abort launch");
-            UnityEditor.EditorApplication.isPlaying = false;
+            AbortLaunchAsync();
             _isRestarting = false;
         }
 
@@ -56,28 +56,34 @@ namespace NashUtilsCs.RestartHelper
         {
             _isRestarting = true;
             _timer.Start();
-            UnityEditor.EditorApplication.isPlaying = false;
+            EditorApplication.isPlaying = false;
             await Task.Delay(40);
-            while (UnityEditor.EditorApplication.isPlaying)
+
+            while (EditorApplication.isPlaying)
             {
                 Log("Waiting to stop");
-                await Task.Delay(100);
+                await Task.Delay(50);
             }
 
-            var stopingTime = _timer.ElapsedMilliseconds;
-            Log($"Stopping took {stopingTime} ms.");
-            while (UnityEditor.EditorApplication.isCompiling)
+            var stoppingTime = _timer.ElapsedMilliseconds;
+            Log($"Stopping took {stoppingTime} ms.");
+
+            
+            while (EditorApplication.isCompiling || EditorApplication.isUpdating) 
             {
+                // actually goes to play here, compiling goes later
                 Log($"Waiting for compiling");
-                await Task.Delay(100);
+                await Task.Delay(50);
             }
 
-            Log($"Editor is ready to go. Compiling took {_timer.ElapsedMilliseconds - stopingTime} ms");
-            UnityEditor.EditorApplication.EnterPlaymode();
+            Log($"Editor is ready to go. Compiling took {_timer.ElapsedMilliseconds - stoppingTime} ms");
 
+            Log($"Editor is in play, but compilation still going :) totaly took {_timer.ElapsedMilliseconds} ms");
             _timer.Stop();
-            Log($"Editor is loading :) totaly took {_timer.ElapsedMilliseconds} ms");
             _isRestarting = false;
+
+            EditorApplication.EnterPlaymode(); //quickly stops that async or entire script
+            EditorApplication.Beep();
         }
 
         private static void ClearConsole()
