@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿#if UNITY_EDITOR
+using System.Diagnostics;
 using UnityEditor;
 using UnityEditor.Callbacks;
 
@@ -51,5 +52,11 @@ namespace NashUtilsCs.BuildPostprocessor
 
             return proc.StandardOutput.ReadToEnd();
         }
+
+        public static void Test()
+        {
+            OnPostprocessBuild(BuildTarget.iOS, "route");
+        }
     }
 }
+#endif
