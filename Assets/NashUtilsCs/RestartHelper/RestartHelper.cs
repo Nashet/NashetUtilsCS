@@ -22,7 +22,7 @@ namespace NashUtilsCs.RestartHelper
             }
             else
             {
-                ClearConsole();
+                //ClearConsole();
                 Log("Registered attempt to restart editor Ж)");
                 RestartAsync();
             }

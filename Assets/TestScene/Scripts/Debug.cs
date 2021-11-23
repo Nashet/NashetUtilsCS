@@ -1,5 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-using NashUtilsCs.HashColorLog;
 
 namespace TestScene
 {
@@ -7,7 +6,8 @@ namespace TestScene
     {
         public static void Log(string text, [CallerFilePath] string file = "null", [CallerMemberName] string method = "null", object context = null)
         {
-            HashColorLog.Log(text, file, method, context);
+            //uncomment for testing
+            //NashUtilsCs.HashColorLog.HashColorLog.Log(text, file, method, context);
         }
     }
 }

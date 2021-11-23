@@ -11,7 +11,7 @@ namespace NashUtilsCs.TimeHelper
         private float _sliderValue = 1f;
         private static bool _softPauseEnabled;
         private static float _originalTimeScale;
-        private const float TimeScale = 0.1f;
+        private const float TimeScale = 0.00001f;
         private bool _manual;
         private float _previousSliderValue;
 
