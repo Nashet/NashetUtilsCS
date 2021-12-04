@@ -16,7 +16,7 @@ namespace NashUtilsCs.TimeHelper
         private float _previousSliderValue;
 
         // %(ctrl on Windows, cmd on macOS), # (shift), & (alt)
-        [MenuItem("EDITORS/M3/SwitchSoftPause %p")]
+        [MenuItem("EDITORS/SwitchSoftPause &p")]
         public static void SwitchSoftPause()
         {
             _softPauseEnabled = !_softPauseEnabled;
@@ -31,19 +31,15 @@ namespace NashUtilsCs.TimeHelper
             }
         }
 
-        // private static void SetTimeScale(original)
-        // {
-        // }
-
         private static void SetTimeScale(float scale)
         {
-            Debug.LogError($"   Sets scle {scale}");
+            //Debug.LogError($"   Sets scle {scale}");
             Time.timeScale = scale;
         }
 
         private static bool _isShown;
 
-        [MenuItem("EDITORS/M3/TimeScaleController")]
+        [MenuItem("EDITORS/TimeScaleController &t")]
         private static void ShowMe()
         {
             if (_isShown)
@@ -53,17 +49,6 @@ namespace NashUtilsCs.TimeHelper
             _isShown = true;
             window.Show();
         }
-
-        //todo: mqake show on hot key
-        
-        // [InitializeOnLoad]
-        // public class Startup
-        // {
-        //     static Startup()
-        //     {
-        //         Get();
-        //     }
-        // }
 
         private void OnDestroy()
         {
