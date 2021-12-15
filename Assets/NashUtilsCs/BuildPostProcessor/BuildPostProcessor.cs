@@ -11,9 +11,9 @@ namespace NashUtilsCs.BuildPostprocessor
 
         static BuildPostProcessor()
         {
-            #if UNITY_EDITOR_WIN
+#if UNITY_EDITOR_WIN
             _shellRoute = "cmd";
-            #endif
+#endif
         }
 
         //didn't worked for real

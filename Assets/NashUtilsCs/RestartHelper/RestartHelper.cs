@@ -68,8 +68,8 @@ namespace NashUtilsCs.RestartHelper
             var stoppingTime = _timer.ElapsedMilliseconds;
             Log($"Stopping took {stoppingTime} ms.");
 
-            
-            while (EditorApplication.isCompiling || EditorApplication.isUpdating) 
+
+            while (EditorApplication.isCompiling || EditorApplication.isUpdating)
             {
                 // actually goes to play here, compiling goes later
                 Log($"Waiting for compiling");

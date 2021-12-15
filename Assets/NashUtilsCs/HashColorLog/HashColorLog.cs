@@ -10,13 +10,15 @@ namespace NashUtilsCs.HashColorLog
     public static class HashColorLog
     {
         private static int _logNumber;
-        private static string[] _logClasses =  { nameof(HashColorLog), "DebugExt", "SimpleLogger", "Extensions", "Logs", "Debug" };
+
+        private static string[] _logClasses =
+            { nameof(HashColorLog), "DebugExt", "SimpleLogger", "Extensions", "Logs", "Debug" };
 
         static HashColorLog()
         {
             Application.logMessageReceivedThreaded += AutoLog;
         }
-         
+
         private static void AutoLog(string condition, string stacktrace, LogType type)
         {
             switch (type)
@@ -28,7 +30,7 @@ namespace NashUtilsCs.HashColorLog
                     var splitString = stacktrace.Split('\n');
                     //splitString.Reorder(0, splitString.Length - 1);
                     var c = GetFilteredClassName(splitString);
-                    var file2 = c.Replace( '/','\\');
+                    var file2 = c.Replace('/', '\\');
                     var method = GetMethodFromFileString(file2);
                     Log(condition, file2, method);
                     break;
@@ -40,7 +42,8 @@ namespace NashUtilsCs.HashColorLog
         }
 
         //doubles old logs
-        public static void Log(string text, [CallerFilePath] string file = "null", [CallerMemberName]string method = "null", object context = null)
+        public static void Log(string text, [CallerFilePath] string file = "null",
+            [CallerMemberName] string method = "null", object context = null)
         {
             string[] splitName;
             if (context == null)
@@ -59,13 +62,14 @@ namespace NashUtilsCs.HashColorLog
                     .Replace("\n", " ")
                     .Replace("\t", "")
                 ;
-            
+
             var message = $"{_logNumber}@{method}()@[{classname}] {oneLineText}";
-            var colorized = $"<color=#{(byte)(color.r * 255f):X2}{(byte)(color.g * 255f):X2}{(byte)(color.b * 255f):X2}>{message}</color>";
+            var colorized =
+                $"<color=#{(byte)(color.r * 255f):X2}{(byte)(color.g * 255f):X2}{(byte)(color.b * 255f):X2}>{message}</color>";
             if (hadMultipleLines)
                 colorized += "\n(Original text) " + text;
 
-            
+
             Debug.LogError(colorized);
 
             _logNumber++;
@@ -100,7 +104,7 @@ namespace NashUtilsCs.HashColorLog
             var color = new Color(tmpHash[0] / 255f, tmpHash[1] / 255f, tmpHash[2] / 255f);
             return color;
         }
-        
+
         private static string GetMethodFromFileString(string file)
         {
             int Pos1 = file.IndexOf(":") + 1;
