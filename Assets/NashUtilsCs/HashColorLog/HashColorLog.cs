@@ -14,6 +14,13 @@ namespace NashUtilsCs.HashColorLog
         private static readonly string[] LOG_CLASSES =
             { nameof(HashColorLog), "DebugExt", "SimpleLogger", "Extensions", "Logs", "Debug" };
 
+        private static readonly string METHOD_NAME_PREFIX = ":";
+        private static readonly string METHOD_NAME_POSTFIX = "(";
+        private static readonly MD5CryptoServiceProvider MD5_CRYPTO_SERVICE_PROVIDER = new MD5CryptoServiceProvider();
+        private static readonly char[] CLASSNAME_SEPARATOR = { '.' };
+        private static readonly char[] SLASH_SEPARATOR = { '\\' };
+        private static readonly char[] NEW_LINE_SEPARATOR = { '\n' };
+
         static HashColorLog()
         {
             Application.logMessageReceivedThreaded += AutoLog;
@@ -24,6 +31,7 @@ namespace NashUtilsCs.HashColorLog
         {
         }
 
+        //misses first log
         private static void AutoLog(string condition, string stacktrace, LogType type)
         {
             if (condition.StartsWith(".<c"))
@@ -35,7 +43,7 @@ namespace NashUtilsCs.HashColorLog
                 case LogType.Exception:
                 case LogType.Log:
                 case LogType.Assert:
-                    var splitString = stacktrace.Split('\n');
+                    var splitString = stacktrace.Split(NEW_LINE_SEPARATOR);
 
                     var classString = GetFilteredClassName(splitString);
                     var file = classString.Replace('/', '\\');
@@ -49,15 +57,14 @@ namespace NashUtilsCs.HashColorLog
             }
         }
 
-        //doubles old logs
         public static void Log(string text, [CallerFilePath] string file = "null",
             [CallerMemberName] string method = "null", object context = null, bool fromAutoLog = false)
         {
             string[] splitName;
             if (context == null)
-                splitName = file.Split('\\');
+                splitName = file.Split(SLASH_SEPARATOR);
             else
-                splitName = context.GetType().ToString().Split('.');
+                splitName = context.GetType().ToString().Split(CLASSNAME_SEPARATOR);
 
             var classname = splitName[splitName.Length - 1];
 
@@ -110,16 +117,16 @@ namespace NashUtilsCs.HashColorLog
         private static Color GetColorFromName(string classname)
         {
             //Compute hash based on source data
-            var tmpSource = ASCIIEncoding.ASCII.GetBytes(classname);
-            var tmpHash = new MD5CryptoServiceProvider().ComputeHash(tmpSource);
+            var tmpSource = Encoding.ASCII.GetBytes(classname);
+            var tmpHash = MD5_CRYPTO_SERVICE_PROVIDER.ComputeHash(tmpSource);
             var color = new Color(tmpHash[0] / 255f, tmpHash[1] / 255f, tmpHash[2] / 255f);
             return color;
         }
 
         private static string GetMethodFromFileString(string file)
         {
-            var pos1 = file.IndexOf(":") + 1;
-            var pos2 = file.IndexOf("(") - 1;
+            var pos1 = file.IndexOf(METHOD_NAME_PREFIX, StringComparison.Ordinal) + 1;
+            var pos2 = file.IndexOf(METHOD_NAME_POSTFIX, StringComparison.Ordinal) - 1;
             var method = file.Substring(pos1, pos2 - pos1);
             return method;
         }
