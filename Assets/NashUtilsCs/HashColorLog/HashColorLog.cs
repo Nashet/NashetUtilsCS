@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
-using Apex;
 using UnityEngine;
 
 namespace NashUtilsCs.HashColorLog
@@ -11,7 +11,7 @@ namespace NashUtilsCs.HashColorLog
     {
         private static int _logNumber;
 
-        private static string[] _logClasses =
+        private static readonly string[] LOG_CLASSES =
             { nameof(HashColorLog), "DebugExt", "SimpleLogger", "Extensions", "Logs", "Debug" };
 
         static HashColorLog()
@@ -19,8 +19,16 @@ namespace NashUtilsCs.HashColorLog
             Application.logMessageReceivedThreaded += AutoLog;
         }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+        private static void Init()
+        {
+        }
+
         private static void AutoLog(string condition, string stacktrace, LogType type)
         {
+            if (condition.StartsWith(".<c"))
+                return;
+
             switch (type)
             {
                 case LogType.Error:
@@ -28,11 +36,11 @@ namespace NashUtilsCs.HashColorLog
                 case LogType.Log:
                 case LogType.Assert:
                     var splitString = stacktrace.Split('\n');
-                    //splitString.Reorder(0, splitString.Length - 1);
-                    var c = GetFilteredClassName(splitString);
-                    var file2 = c.Replace('/', '\\');
-                    var method = GetMethodFromFileString(file2);
-                    Log(condition, file2, method);
+
+                    var classString = GetFilteredClassName(splitString);
+                    var file = classString.Replace('/', '\\');
+                    var method = GetMethodFromFileString(file);
+                    Log(condition, file, method, fromAutoLog: true);
                     break;
                 case LogType.Warning:
                     break;
@@ -43,7 +51,7 @@ namespace NashUtilsCs.HashColorLog
 
         //doubles old logs
         public static void Log(string text, [CallerFilePath] string file = "null",
-            [CallerMemberName] string method = "null", object context = null)
+            [CallerMemberName] string method = "null", object context = null, bool fromAutoLog = false)
         {
             string[] splitName;
             if (context == null)
@@ -63,32 +71,35 @@ namespace NashUtilsCs.HashColorLog
                     .Replace("\t", "")
                 ;
 
-            var message = $"{_logNumber}@{method}()@[{classname}] {oneLineText}";
+            var message = $"{_logNumber} {method}()@{classname} {oneLineText}";
             var colorized =
-                $"<color=#{(byte)(color.r * 255f):X2}{(byte)(color.g * 255f):X2}{(byte)(color.b * 255f):X2}>{message}</color>";
+                $".<color=#{(byte)(color.r * 255f):X2}{(byte)(color.g * 255f):X2}{(byte)(color.b * 255f):X2}>{message}</color>";
             if (hadMultipleLines)
                 colorized += "\n(Original text) " + text;
-
 
             Debug.LogError(colorized);
 
             _logNumber++;
         }
 
-        private static string GetFilteredClassName(string[] splitName)
+        private static string GetFilteredClassName(IReadOnlyList<string> splitName)
         {
             var classname = splitName[0];
 
             var classLevel = 0;
-            for (var index = 0; index < _logClasses.Length; index++)
+            for (var index = 0; index < LOG_CLASSES.Length; index++)
             {
-                var logClass = _logClasses[index];
+                var logClass = LOG_CLASSES[index];
                 if (string.IsNullOrEmpty(classname) || classname.Contains(logClass))
                 {
                     classLevel++;
-                    classname = splitName[classLevel];
+
+                    if (classLevel > splitName.Count - 1)
+                        classname = "NoClassInfo";
+                    else
+                        classname = splitName[classLevel];
+
                     index = -1;
-                    // at every new level it should be re run
                 }
             }
 
@@ -107,9 +118,9 @@ namespace NashUtilsCs.HashColorLog
 
         private static string GetMethodFromFileString(string file)
         {
-            int Pos1 = file.IndexOf(":") + 1;
-            int Pos2 = file.IndexOf("(") - 1;
-            var method = file.Substring(Pos1, Pos2 - Pos1);
+            var pos1 = file.IndexOf(":") + 1;
+            var pos2 = file.IndexOf("(") - 1;
+            var method = file.Substring(pos1, pos2 - pos1);
             return method;
         }
     }
