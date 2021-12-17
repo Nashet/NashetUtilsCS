@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -14,12 +13,15 @@ namespace NashUtilsCs.HashColorLog
         private static readonly string[] LOG_CLASSES =
             { nameof(HashColorLog), "DebugExt", "SimpleLogger", "Extensions", "Logs", "Debug" };
 
-        private static readonly string METHOD_NAME_PREFIX = ":";
-        private static readonly string METHOD_NAME_POSTFIX = "(";
-        private static readonly MD5CryptoServiceProvider MD5_CRYPTO_SERVICE_PROVIDER = new MD5CryptoServiceProvider();
+        private static readonly List<LogType> AUTO_LOG_LIMIT = new List<LogType> { LogType.Assert, LogType.Log };
+        private const char METHOD_NAME_PREFIX = ':';
+        private const char METHOD_NAME_PREFIX2 = '.';
+        private const char METHOD_NAME_POSTFIX = '(';
         private static readonly char[] CLASSNAME_SEPARATOR = { '.' };
         private static readonly char[] SLASH_SEPARATOR = { '\\' };
         private static readonly char[] NEW_LINE_SEPARATOR = { '\n' };
+        private static readonly MD5CryptoServiceProvider MD5_CRYPTO_SERVICE_PROVIDER = new MD5CryptoServiceProvider();
+        private static string _noclassinfo = "NoClassInfo";
 
         static HashColorLog()
         {
@@ -37,24 +39,14 @@ namespace NashUtilsCs.HashColorLog
             if (condition.StartsWith(".<c"))
                 return;
 
-            switch (type)
-            {
-                case LogType.Error:
-                case LogType.Exception:
-                case LogType.Log:
-                case LogType.Assert:
-                    var splitString = stacktrace.Split(NEW_LINE_SEPARATOR);
+            if (!AUTO_LOG_LIMIT.Contains(type))
+                return;
+            var splitString = stacktrace.Split(NEW_LINE_SEPARATOR);
 
-                    var classString = GetFilteredClassName(splitString);
-                    var file = classString.Replace('/', '\\');
-                    var method = GetMethodFromFileString(file);
-                    Log(condition, file, method, fromAutoLog: true);
-                    break;
-                case LogType.Warning:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
+            var classString = GetFilteredClassName(splitString);
+            var file = classString.Replace('/', '\\');
+            var method = GetMethodFromFileString(file);
+            Log(condition, file, method, fromAutoLog: true);
         }
 
         public static void Log(string text, [CallerFilePath] string file = "null",
@@ -102,7 +94,9 @@ namespace NashUtilsCs.HashColorLog
                     classLevel++;
 
                     if (classLevel > splitName.Count - 1)
-                        classname = "NoClassInfo";
+                    {
+                        classname = _noclassinfo;
+                    }
                     else
                         classname = splitName[classLevel];
 
@@ -125,9 +119,20 @@ namespace NashUtilsCs.HashColorLog
 
         private static string GetMethodFromFileString(string file)
         {
-            var pos1 = file.IndexOf(METHOD_NAME_PREFIX, StringComparison.Ordinal) + 1;
-            var pos2 = file.IndexOf(METHOD_NAME_POSTFIX, StringComparison.Ordinal) - 1;
-            var method = file.Substring(pos1, pos2 - pos1);
+            if (file == _noclassinfo)
+                return _noclassinfo;
+
+            var pos1 = file.IndexOf(METHOD_NAME_PREFIX) + 1;
+            var pos2 = 0;
+            pos2 = file.IndexOf(METHOD_NAME_POSTFIX) - 1;
+
+
+            if (pos2 < pos1)
+                pos1 = file.LastIndexOf(METHOD_NAME_PREFIX2, 0, pos2) + 1;
+
+            var method = "";
+            method = file.Substring(pos1, pos2 - pos1);
+
             return method;
         }
     }
