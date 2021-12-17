@@ -21,7 +21,7 @@ namespace NashUtilsCs.HashColorLog
         private static readonly char[] SLASH_SEPARATOR = { '\\' };
         private static readonly char[] NEW_LINE_SEPARATOR = { '\n' };
         private static readonly MD5CryptoServiceProvider MD5_CRYPTO_SERVICE_PROVIDER = new MD5CryptoServiceProvider();
-        private static string _noclassinfo = "NoClassInfo";
+        private const string NO_CLASS_INFO = "NoClassInfo";
 
         static HashColorLog()
         {
@@ -34,13 +34,15 @@ namespace NashUtilsCs.HashColorLog
         }
 
         //misses first log
+        // add context?
         private static void AutoLog(string condition, string stacktrace, LogType type)
         {
-            if (condition.StartsWith(".<c"))
+            if (condition.StartsWith(".<c")) //  .<color= - already posted from manual call, see below
                 return;
 
             if (!AUTO_LOG_LIMIT.Contains(type))
                 return;
+            
             var splitString = stacktrace.Split(NEW_LINE_SEPARATOR);
 
             var classString = GetFilteredClassName(splitString);
@@ -70,11 +72,9 @@ namespace NashUtilsCs.HashColorLog
                     .Replace("\t", "")
                 ;
 
-            var message = $"{_logNumber} {method}()@{classname} {oneLineText}";
+            var hexColor = (uint)(color.r * 255f * 256 * 256 + color.g * 255f * 256 + color.b * 255f);
             var colorized =
-                $".<color=#{(byte)(color.r * 255f):X2}{(byte)(color.g * 255f):X2}{(byte)(color.b * 255f):X2}>{message}</color>";
-            if (hadMultipleLines)
-                colorized += "\n(Original text) " + text;
+                $".<color=#{hexColor:X2}>{_logNumber} {method}()@{classname} {oneLineText}</color>{(hadMultipleLines ? $"\n(Original text) {text}" : string.Empty)}";
 
             Debug.LogError(colorized);
 
@@ -95,7 +95,7 @@ namespace NashUtilsCs.HashColorLog
 
                     if (classLevel > splitName.Count - 1)
                     {
-                        classname = _noclassinfo;
+                        classname = NO_CLASS_INFO;
                     }
                     else
                         classname = splitName[classLevel];
@@ -119,8 +119,8 @@ namespace NashUtilsCs.HashColorLog
 
         private static string GetMethodFromFileString(string file)
         {
-            if (file == _noclassinfo)
-                return _noclassinfo;
+            if (file == NO_CLASS_INFO)
+                return NO_CLASS_INFO;
 
             var pos1 = file.IndexOf(METHOD_NAME_PREFIX) + 1;
             var pos2 = 0;
