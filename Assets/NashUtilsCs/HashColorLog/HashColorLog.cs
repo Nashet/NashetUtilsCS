@@ -8,12 +8,10 @@ namespace NashUtilsCs.HashColorLog
 {
     public static class HashColorLog
     {
-        private static int _logNumber;
-
         private static readonly string[] LOG_CLASSES =
             { nameof(HashColorLog), "DebugExt", "SimpleLogger", "Extensions", "Logs", "Debug" };
 
-        private static readonly List<LogType> AUTO_LOG_LIMIT = new List<LogType> { LogType.Assert, LogType.Log };
+        private static readonly List<LogType> AUTO_LOG_LIMIT = new List<LogType> { LogType.Error, LogType.Assert };
         private const char METHOD_NAME_PREFIX = ':';
         private const char METHOD_NAME_PREFIX2 = '.';
         private const char METHOD_NAME_POSTFIX = '(';
@@ -22,6 +20,9 @@ namespace NashUtilsCs.HashColorLog
         private static readonly char[] NEW_LINE_SEPARATOR = { '\n' };
         private static readonly MD5CryptoServiceProvider MD5_CRYPTO_SERVICE_PROVIDER = new MD5CryptoServiceProvider();
         private const string NO_CLASS_INFO = "NoClassInfo";
+        
+        private static int _logNumber;
+        private const bool ENABLE_AUTOLOG = true; 
 
         static HashColorLog()
         {
@@ -35,8 +36,12 @@ namespace NashUtilsCs.HashColorLog
 
         //misses first log
         // add context?
+        // serialize fields?
         private static void AutoLog(string condition, string stacktrace, LogType type)
         {
+            if (!ENABLE_AUTOLOG)
+                return;
+            
             if (condition.StartsWith(".<c")) //  .<color= - already posted from manual call, see below
                 return;
 
@@ -48,11 +53,11 @@ namespace NashUtilsCs.HashColorLog
             var classString = GetFilteredClassName(splitString);
             var file = classString.Replace('/', '\\');
             var method = GetMethodFromFileString(file);
-            Log(condition, file, method, fromAutoLog: true);
+            Log(condition, file, method);
         }
 
         public static void Log(string text, [CallerFilePath] string file = "null",
-            [CallerMemberName] string method = "null", object context = null, bool fromAutoLog = false)
+            [CallerMemberName] string method = "null", object context = null)
         {
             string[] splitName;
             if (context == null)
