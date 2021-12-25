@@ -8,12 +8,13 @@ namespace NashUtilsCs.TimeHelper
 {
     public class TimeScaleHelper : EditorWindow
     {
-        private float _sliderValue = 1f;
+        private const float SOFT_PAUSE_SCALE = 0.00001f;
         private static bool _softPauseEnabled;
         private static float _originalTimeScale;
-        private const float TimeScale = 0.00001f;
+        private float _sliderValue = 1f;
         private bool _manual;
         private float _previousSliderValue;
+        private bool _lags;
 
         // %(ctrl on Windows, cmd on macOS), # (shift), & (alt)
         [MenuItem("EDITORS/SwitchSoftPause &p")]
@@ -23,7 +24,7 @@ namespace NashUtilsCs.TimeHelper
             if (_softPauseEnabled)
             {
                 _originalTimeScale = Time.timeScale;
-                SetTimeScale(TimeScale);
+                SetTimeScale(SOFT_PAUSE_SCALE);
             }
             else
             {
@@ -72,12 +73,13 @@ namespace NashUtilsCs.TimeHelper
                     SetTimeScale(Mathf.Clamp(_sliderValue, 0.05f, 1f));
             }
 
+            // just spacers:
             GUILayout.BeginHorizontal();
+            GUILayout.Label($"", GUILayout.ExpandWidth(true));
+            GUILayout.EndHorizontal();
 
-            if (GUILayout.Button(" ", GUILayout.Width(8))) // spacer
-            {
-            }
-
+            GUILayout.BeginHorizontal();
+            GUILayout.Label($"FPS: {1.0f / Time.deltaTime:F2}", GUILayout.ExpandWidth(true));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
@@ -85,7 +87,7 @@ namespace NashUtilsCs.TimeHelper
             if (GUILayout.Button("Soft pause", GUILayout.Width(80)))
             {
                 _manual = true;
-                SetTimeScale(TimeScale);
+                SetTimeScale(SOFT_PAUSE_SCALE);
             }
 
             if (GUILayout.Button("Boost", GUILayout.Width(60)))
@@ -102,6 +104,10 @@ namespace NashUtilsCs.TimeHelper
 
             GUILayout.EndHorizontal();
 
+            if (GUILayout.Button("On/off lags ", GUILayout.Width(80))) // spacer
+            {
+                _lags = !_lags;
+            }
             // keep as example
 
             // GUILayout.BeginHorizontal();
@@ -132,6 +138,18 @@ namespace NashUtilsCs.TimeHelper
         {
             if (EditorApplication.isPlaying)
                 Debug.Break();
+        }
+
+        private void Update()
+        {
+            if (_lags)
+            {
+                string fr = "";
+                for (int i = 0; i < 10000; i++)
+                {
+                    fr += i.ToString();
+                }
+            }
         }
     }
 }
