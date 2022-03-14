@@ -16,8 +16,6 @@ namespace NashUtilsCs.TimeHelper
         private float _previousSliderValue;
         private bool _lags;
 
-        // %(ctrl on Windows, cmd on macOS), # (shift), & (alt)
-        [MenuItem("EDITORS/SwitchSoftPause &p")]
         public static void SwitchSoftPause()
         {
             _softPauseEnabled = !_softPauseEnabled;

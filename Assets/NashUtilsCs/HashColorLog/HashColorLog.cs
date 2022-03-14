@@ -11,7 +11,7 @@ namespace NashUtilsCs.HashColorLog
         private static readonly string[] LOG_CLASSES =
             { nameof(HashColorLog), "DebugExt", "SimpleLogger", "Extensions", "Logs", "Debug" };
 
-        private static readonly List<LogType> AUTO_LOG_LIMIT = new List<LogType> { LogType.Error, LogType.Assert };
+        private static readonly List<LogType> AUTO_LOG_LIMIT = new List<LogType> { LogType.Assert };
         private const char METHOD_NAME_PREFIX = ':';
         private const char METHOD_NAME_PREFIX2 = '.';
         private const char METHOD_NAME_POSTFIX = '(';
