@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 
 namespace NashUtilsCs.TimeHelper
 {
@@ -12,3 +13,4 @@ namespace NashUtilsCs.TimeHelper
         }
     }
 }
+#endif
