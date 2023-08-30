@@ -1,18 +1,20 @@
 {
-  "name": "com.nashet.utils",
-  "version": "0.1.0",
-  "displayName": "general utils",
-  "description": "", 
-  "licensesUrl": "https://example.com/licensing.html",
-  "dependencies": { },
-  "keywords": [
-	"Utils"
-  ],
-  "samples": [
-    ]
-  "author": {
-    "name": "Nashet",
-    "email": "",
-    "url": "https://github.com/Nashet"
-  }
+	"name": "com.nashet.utils",
+	"version": "0.1.0",
+	"displayName": "general utils",
+	"description": "",
+	"licensesUrl": "https://example.com/licensing.html",
+	"dependencies": {},
+	"keywords": [
+		"Utils"
+	],
+	"author": {
+		"name": "Nashet",
+		"email": "",
+		"url": "https://github.com/Nashet"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Nashet/NashetUtilsCS.git"
+	}
 }
