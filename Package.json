@@ -1,7 +1,7 @@
 {
 	"name": "com.nashet.utils",
 	"version": "0.1.0",
-	"displayName": "general utils",
+	"displayName": "General utils",
 	"description": "",
 	"licensesUrl": "https://example.com/licensing.html",
 	"dependencies": {},
