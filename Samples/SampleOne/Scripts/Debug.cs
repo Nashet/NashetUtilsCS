@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using NashUtilsCs.HashColorLog;
 
 namespace TestScene
 {
@@ -11,6 +12,20 @@ namespace TestScene
 		public static void LogError(string text, [CallerFilePath] string file = "null", [CallerMemberName] string method = "null", object context = null)
 		{
 			NashUtilsCs.HashColorLog.HashColorLog.Log(text, file, method, context);
+		}
+		public static void LogWarning(object message)
+		{
+			NashUtilsCs.HashColorLog.HashColorLog.Log(message.ToString());
+		}
+    
+		public static void Log(object message)
+		{
+			NashUtilsCs.HashColorLog.HashColorLog.Log(message.ToString());
+		}
+    
+		public static void LogException(object message)
+		{
+			NashUtilsCs.HashColorLog.HashColorLog.Log(message.ToString());
 		}
 	}
 }

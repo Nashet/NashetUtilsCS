@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using NashUtilsCs;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
@@ -8,7 +9,6 @@ namespace Assets.NashUtilsCs.NullChecker
 {
 	public class NullFieldsChecker : UnityEditor.AssetModificationProcessor
 	{
-		private static bool IsEnabled = true;
 		private static string prefix = $"[{nameof(NullFieldsChecker)}]";
 		private static Type checkingAttribute = typeof(SerializeField);
 		private static List<Type> excludedTypes = new List<Type> { };//typeof(TextMeshProUGUI)
@@ -16,7 +16,7 @@ namespace Assets.NashUtilsCs.NullChecker
 		[DidReloadScripts]
 		private static void OnScriptsReloaded()
 		{
-			if (!IsEnabled)
+			if (!NashUtilsSettings.instance.useNullChecker)
 				return;
 			// Get all game objects in the scene
 			GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>(); // add SO files

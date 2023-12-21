@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using NashUtilsCs;
+using UnityEditor;
 using UnityEngine;
 
 namespace Assets.NashUtilsCs.NullChecker
@@ -8,22 +9,27 @@ namespace Assets.NashUtilsCs.NullChecker
 	{
 		public override void OnGUI(Rect inRect, SerializedProperty inProp, GUIContent label)
 		{
+			
+				
 			EditorGUI.BeginProperty(inRect, label, inProp);
 
-			bool isError = inProp.type == "string" && string.IsNullOrEmpty(inProp.stringValue) ||
-				inProp.propertyType == SerializedPropertyType.ObjectReference && inProp.objectReferenceValue == null;
-			if (isError)
+			if (NashUtilsSettings.instance.useColorMarkingsForNulls)
 			{
-				if (inProp.type == "string" || inProp.propertyType == SerializedPropertyType.ObjectReference)
+				bool isError = inProp.type == "string" && string.IsNullOrEmpty(inProp.stringValue) ||
+				               inProp.propertyType == SerializedPropertyType.ObjectReference &&
+				               inProp.objectReferenceValue == null;
+				if (isError)
 				{
-					label.text = "[!] " + label.text;
-					GUI.color = Color.red;
+					if (inProp.type == "string" || inProp.propertyType == SerializedPropertyType.ObjectReference)
+					{
+						label.text = "[!] " + label.text;
+						GUI.color = Color.red;
+					}
 				}
 			}
 
 			EditorGUI.PropertyField(inRect, inProp, label);
-			GUI.color = Color.white;
-
+			GUI.color = Color.white;// restore default color for other elements
 			EditorGUI.EndProperty();
 		}
 	}

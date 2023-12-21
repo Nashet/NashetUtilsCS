@@ -39,7 +39,7 @@ namespace NashUtilsCs.HashColorLog
 		// serialize fields?
 		private static void AutoLog(string condition, string stacktrace, LogType type)
         {
-            if (!ENABLE_AUTOLOG)
+            if (!NashUtilsSettings.instance.useAutoLogs)
                 return;
             
             if (condition.StartsWith(".<c")) //  .<color= - already posted from manual call, see below
