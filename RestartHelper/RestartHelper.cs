@@ -13,7 +13,7 @@ namespace NashUtilsCs.RestartHelper
         private static readonly System.Diagnostics.Stopwatch _timer = new System.Diagnostics.Stopwatch();
 
         // %(ctrl on Windows, cmd on macOS), # (shift), & (alt)
-        [MenuItem("EDITORS/RestartHelper &r")]
+        [MenuItem("NashUtils/RestartHelper &r")]
         public static void RestartIfCompilingIsDone()
         {
             if (_isRestarting)
@@ -29,7 +29,7 @@ namespace NashUtilsCs.RestartHelper
         }
 
         // %(ctrl on Windows, cmd on macOS), # (shift), & (alt)
-        [MenuItem("EDITORS/AbortLaunch &a")]
+        [MenuItem("NashUtils/AbortLaunch &a")]
         public static void AbortLaunch()
         {
             Log("Registered attempt to abort launch");

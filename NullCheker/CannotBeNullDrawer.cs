@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Assets.NashUtilsCs.NullCheker
+namespace Assets.NashUtilsCs.NullChecker
 {
 	[CustomPropertyDrawer(typeof(IsNotNull))]
 	public class CannotBeNullDrawer : PropertyDrawer

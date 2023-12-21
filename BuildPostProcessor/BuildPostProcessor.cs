@@ -3,7 +3,7 @@ using System.Diagnostics;
 using UnityEditor;
 using UnityEditor.Callbacks;
 
-namespace NashUtilsCs.BuildPostprocessor
+namespace NashUtilsCs.BuildProcessor
 {
     public static class BuildPostProcessor
     {

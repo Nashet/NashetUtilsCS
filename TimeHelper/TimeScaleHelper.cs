@@ -38,7 +38,7 @@ namespace NashUtilsCs.TimeHelper
 
         private static bool _isShown;
 
-        [MenuItem("EDITORS/TimeScaleController &t")]
+        [MenuItem("NashUtils/TimeScaleController &t")]
         private static void ShowMe()
         {
             if (_isShown)

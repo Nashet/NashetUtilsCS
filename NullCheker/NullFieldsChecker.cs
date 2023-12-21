@@ -4,7 +4,7 @@ using System.Reflection;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
-namespace Assets.NashUtilsCs.NullCheker
+namespace Assets.NashUtilsCs.NullChecker
 {
 	public class NullFieldsChecker : UnityEditor.AssetModificationProcessor
 	{

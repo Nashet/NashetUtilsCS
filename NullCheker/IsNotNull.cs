@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.NashUtilsCs.NullCheker
+namespace Assets.NashUtilsCs.NullChecker
 {
 	/// <summary>
 	/// There would be a message if you forgot to set that field
