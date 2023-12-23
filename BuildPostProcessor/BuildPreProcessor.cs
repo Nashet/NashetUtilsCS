@@ -1,11 +1,10 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEditor.Build;
 using UnityEngine; // really need that
 
 namespace NashUtilsCs.BuildProcessor
-{
-#if UNITY_EDITOR
-    public class BuildPreProcessor : IPreprocessBuild
+{ public class BuildPreProcessor : IPreprocessBuild
     {
         public int callbackOrder
         {
@@ -24,5 +23,5 @@ namespace NashUtilsCs.BuildProcessor
 #endif
         }
     }
-#endif
 }
+#endif

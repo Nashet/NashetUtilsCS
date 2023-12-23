@@ -1,6 +1,7 @@
 ﻿using NashUtilsCs;
 using UnityEditor;
 using UnityEngine;
+#if UNITY_EDITOR
 
 namespace Assets.NashUtilsCs.NullChecker
 {
@@ -34,3 +35,4 @@ namespace Assets.NashUtilsCs.NullChecker
 		}
 	}
 }
+#endif
